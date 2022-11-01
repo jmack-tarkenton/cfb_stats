@@ -4,8 +4,6 @@ const path=require('path');
 const app = express(); 
 const port = process.env.PORT || 5000; 
 
-const sdv=require('sportsdataverse');
-
 dotenv.config();
 
 

@@ -87,5 +87,17 @@ router.get('/teams/standings/top25', async (req, res) => {
 });
 
 
+router.get('/team/:team_id/information', async (req, res) => {
+    const {team_id}=req.params;
+    try {
+        const {team} = await sdv.cfb.getTeamInfo(team_id);
+        res.json(team);
+
+    } catch (error) {
+        console.error({ error })
+        res.json({ error })
+    }
+});
+
 
 module.exports = router;
