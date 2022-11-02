@@ -21,10 +21,8 @@ const CfbTable = (props) => {
     if (!size) {
         size = "sm";
     }
-    console.log({ size });
-    console.log({ cols, rows });
     return (
-        <Table striped bordered hover variant="dark" size={size}>
+        <Table striped bordered hover variant="dark" size={size} className={"text-center"}>
             <thead>
                 <tr>
                     {cols.map(col => <th>{col.toUpperCase()}</th>)}

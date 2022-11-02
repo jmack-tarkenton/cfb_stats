@@ -26,6 +26,12 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
   });
 }
+
+//An error handling middleware
+app.use(function(err, req, res, next) {
+  res.status(500);
+  res.send("Oops, something went wrong.")
+});
 // This displays message that the server running and listening to specified port
 app.listen(port, () => console.log(`Listening on port ${port}`));
 

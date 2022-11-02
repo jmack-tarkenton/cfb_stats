@@ -25,7 +25,7 @@ class Top25Teams extends Component {
         // const response = await fetch('/express_backend');
         const response = await fetch('/api/cfb/teams');
         const body = await response.json();
-        console.log({ body });
+  
         if (response.status !== 200) {
             throw Error(body.message)
         }
@@ -35,7 +35,7 @@ class Top25Teams extends Component {
     getNcaaConferences = async () => {
         const response = await fetch('/api/cfb/conferences');
         const conferences = await response.json();
-        console.log({ conferences });
+
         if (response.status !== 200) {
             throw Error(conferences)
         }
@@ -45,7 +45,7 @@ class Top25Teams extends Component {
     getTop25TeamsByStandings = async () => {
         const response = await fetch('/api/cfb/teams/standings/top25');
         const teams = await response.json();
-        console.log({ teams });
+
         if (response.status !== 200) {
             throw Error(teams)
         }
@@ -57,8 +57,7 @@ class Top25Teams extends Component {
         const conference_id = row_id ?? e.target.id;
         const response = await fetch(`/api/cfb/teams/conference/${conference_id}`)
         const teams = await response.json();
-        console.log({ teams });
-        // this.setState({ teams });
+
     }
 
     // history = useHistory();
@@ -73,7 +72,7 @@ class Top25Teams extends Component {
         const firstEntry = objectArray[0];
         const cols = Object.keys(firstEntry).filter(col => col != "id");
         const rows = objectArray.map((row, i) => {
-            console.log({ row })
+         
             const hasId = row.hasOwnProperty("id");
             const rowId = hasId ? row.id : i;
             var rowCopy = { ...row };

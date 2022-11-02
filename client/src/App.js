@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Routes, Route, Link } from "react-router-dom";
 import Container from 'react-bootstrap/Container';
+import CfbNav from './components/Navbar';
 import Top25Teams from './views/Top25Teams';
 import Team from './views/Team';
 
@@ -12,6 +13,7 @@ function App() {
   return (
     <div className="App">
       <Container fluid className={"px-0"}>
+        <CfbNav/>
         <Routes>
           <Route path="/" element={<Top25Teams />} />
           <Route path="/team/:team_id" element={<Team />} />

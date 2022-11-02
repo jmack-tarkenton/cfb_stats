@@ -3,10 +3,14 @@ import { useParams } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap';
 import CfbTable from '../components/Table';
 import CfbNav from '../components/Navbar';
+import NextEvent from './partials/NextMatchup';
+import TeamCard from '../components/TeamCard';
+import BarChart from '../components/charts/BarChart';
 
 
 function Team(props) {
     const [team, setTeam] = useState({});
+    const [nextMatchup,setNextMatchup]=useState(null);
     const { team_id } = useParams();
 
     const getTeamInfo = async (team_id) => {
@@ -17,27 +21,41 @@ function Team(props) {
         if (response.status !== 200) {
             throw Error(team)
         }
+        let { nextEvent, displayName } = team;
+        if(nextEvent){
+            setNextMatchup(nextEvent);
+        }
         return team;
 
     }
 
 
 
-    React.useEffect(() => {
+    useEffect(() => {
         getTeamInfo(team_id)
             .then(setTeam)
-    }, [team_id])
+    }, [team_id]);
+
+
     const createTeamSummary = function (team) {
-        console.log({ team });
+
         let { id, abbreviation, displayName, logos, nextEvent, record, standingSummary } = team;
 
-        const short_date = new Date(nextEvent[0].date).toLocaleDateString('en-US')
+        let short_date;
+        let short_name;
+        if (nextEvent && nextEvent[0]) {
+            short_date = nextEvent[0]?.date;
+            short_name = nextEvent[0]?.name;
+            if (short_date) {
+                short_date = new Date(nextEvent[0].date).toLocaleDateString('en-US')
+            }
+        }
         return {
             id,
             abbreviation,
             title: displayName,
             logo: logos[0]?.href,
-            "Next Game": `${nextEvent[0].shortName} on ${short_date}`,
+            "Next Game": `${short_name} on ${short_date}`,
             record: record.items[0].summary,
             standing: standingSummary
         }
@@ -47,7 +65,6 @@ function Team(props) {
 
         const cols = Object.keys(team).filter(col => col != "id");
         const rows = Object.values(team);
-        console.log({ rows })
 
         return {
             cols,
@@ -57,15 +74,21 @@ function Team(props) {
     }
 
     const { color, alternateColor } = team;
-    const style = { color: "#" + alternateColor, backgroundColor: "#" + color };
+    const style = { width:"100%",color: "#" + color, backgroundColor: "#" + alternateColor };
+
+    
 
     return (
         <>
-            {team && team.hasOwnProperty("displayName") && <CfbNav style={style} {...createTeamSummary(team)} />}
+            {/* {team && team.hasOwnProperty("displayName") && <CfbNav style={style} {...createTeamSummary(team)} />} */}
             <Row >
 
                 <Col xs={12} sm={6}>
-                  
+                    {team && team["displayName"] && <TeamCard style={style} {...createTeamSummary(team)} />}
+                </Col>
+                <Col xs={12} sm={6}>
+                    {nextMatchup && nextMatchup[0] ? <NextEvent {...nextMatchup[0]} /> : <p>No Upcoming Events</p>}
+        
                 </Col>
             </Row>
 
