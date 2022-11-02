@@ -1,45 +1,42 @@
 const express = require('express');
 const responseTime = require('response-time');
-const NodeCache = require( "node-cache" );
+
 const dotenv = require('dotenv');
 const path = require('path');
 const port = process.env.PORT || 5000;
 
-const cfbCache=new NodeCache();
-
-const runServer = async () => {
-  const app = express();
-
-
-  dotenv.config();
-
-  app.use(responseTime());
-
-  app.use(express.urlencoded({ extended: true }));
-  app.use(express.json());
-
-  app.use(express.static(path.join(__dirname, 'client/build')));
 
 
 
-  const collegeFootball = require("./routes/cfb-routes");
-
-  app.use('/api/cfb', collegeFootball(cfbCache));
+const app = express();
 
 
-  if (process.env.NODE_ENV === "production") {
-    app.use(express.static(path.join(__dirname, "client/build")));
+dotenv.config();
 
-    app.get('/*', (req, res) => {
-      res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
-    });
-  }
+app.use(responseTime());
 
-  // This displays message that the server running and listening to specified port
-  app.listen(port, () => console.log(`Listening on port ${port}`));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+app.use(express.static(path.join(__dirname, 'client/build')));
+
+
+
+const collegeFootball = require("./routes/cfb-routes");
+
+app.use('/api/cfb', collegeFootball);
+
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "client/build")));
+
+  app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+  });
 }
 
-runServer();
+// This displays message that the server running and listening to specified port
+app.listen(port, () => console.log(`Listening on port ${port}`));
 
 
 

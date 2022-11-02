@@ -7,7 +7,6 @@ function PlayerCard(props) {
     let { stat_type, stat } = stats;
     const imgSrc = headshot.href;
     const imgText = headshot.alt;
-    console.log({ props });
     return (
         <Card style={{
             // width: '18rem' 
