@@ -25,7 +25,7 @@ class Top25Teams extends Component {
         // const response = await fetch('/express_backend');
         const response = await fetch('/api/cfb/teams');
         const body = await response.json();
-  
+
         if (response.status !== 200) {
             throw Error(body.message)
         }
@@ -64,7 +64,7 @@ class Top25Teams extends Component {
 
     handleTeamTableClick = async (row_id) => {
 
-        window.location.href=`/team/${row_id}`;
+        window.location.href = `/team/${row_id}`;
 
     }
 
@@ -72,7 +72,7 @@ class Top25Teams extends Component {
         const firstEntry = objectArray[0];
         const cols = Object.keys(firstEntry).filter(col => col != "id");
         const rows = objectArray.map((row, i) => {
-         
+
             const hasId = row.hasOwnProperty("id");
             const rowId = hasId ? row.id : i;
             var rowCopy = { ...row };
@@ -104,15 +104,20 @@ class Top25Teams extends Component {
 
     render() {
         return (
-          
 
-                <Row>
-                    <Col xs={12} sm={6}>
-                        {this.state.teams && Array.isArray(this.state.teams) ? <CfbTable {...this.createTableDefinitions(this.state.teams)} handleClick={this.handleTeamTableClick} /> : <p>LOADING...</p>
-                        }
-                    </Col>
-                </Row>
-      
+
+            <Row>
+                <Col className={"bg-dark text-light text-center"}>
+                    <h3>
+                        Click a team in the table to see stats for their next game
+                    </h3>
+                </Col>
+                <Col xs={12}>
+                    {this.state.teams && Array.isArray(this.state.teams) ? <CfbTable {...this.createTableDefinitions(this.state.teams)} handleClick={this.handleTeamTableClick} className={"top-25"} /> : <p>LOADING...</p>
+                    }
+                </Col>
+            </Row>
+
         );
     }
 }

@@ -1,37 +1,45 @@
-const express = require('express'); 
-const dotenv=require('dotenv');
-const path=require('path');
-const app = express(); 
-const port = process.env.PORT || 5000; 
+const express = require('express');
+const responseTime = require('response-time');
+const NodeCache = require( "node-cache" );
+const dotenv = require('dotenv');
+const path = require('path');
+const port = process.env.PORT || 5000;
 
-dotenv.config();
+const cfbCache=new NodeCache();
 
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-app.use(express.static(path.join(__dirname, 'client/build')));
+const runServer = async () => {
+  const app = express();
 
 
-  
-const collegeFootball=require("./routes/cfb-routes");
+  dotenv.config();
 
-app.use('/api/cfb',collegeFootball);
+  app.use(responseTime());
+
+  app.use(express.urlencoded({ extended: true }));
+  app.use(express.json());
+
+  app.use(express.static(path.join(__dirname, 'client/build')));
 
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "client/build")));
 
-  app.get('/*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
-  });
+  const collegeFootball = require("./routes/cfb-routes");
+
+  app.use('/api/cfb', collegeFootball(cfbCache));
+
+
+  if (process.env.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname, "client/build")));
+
+    app.get('/*', (req, res) => {
+      res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+    });
+  }
+
+  // This displays message that the server running and listening to specified port
+  app.listen(port, () => console.log(`Listening on port ${port}`));
 }
 
-//An error handling middleware
-app.use(function(err, req, res, next) {
-  res.status(500);
-  res.send("Oops, something went wrong.")
-});
-// This displays message that the server running and listening to specified port
-app.listen(port, () => console.log(`Listening on port ${port}`));
+runServer();
+
+
 

@@ -4,7 +4,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import CfbTable from '../components/Table';
 import CfbNav from '../components/Navbar';
 import NextEvent from './partials/NextMatchup';
-import TeamCard from '../components/TeamCard';
+import TeamCard from '../components/cards/TeamCard';
 import BarChart from '../components/charts/BarChart';
 
 
@@ -17,7 +17,7 @@ function Team(props) {
 
         const response = await fetch(`/api/cfb/team/${team_id}/information`);
         const team = await response.json();
-        console.log(team);
+        console.log({team});
         if (response.status !== 200) {
             throw Error(team)
         }
@@ -83,10 +83,10 @@ function Team(props) {
             {/* {team && team.hasOwnProperty("displayName") && <CfbNav style={style} {...createTeamSummary(team)} />} */}
             <Row >
 
-                <Col xs={12} sm={6}>
+                <Col xs={12} sm={12}>
                     {team && team["displayName"] && <TeamCard style={style} {...createTeamSummary(team)} />}
                 </Col>
-                <Col xs={12} sm={6}>
+                <Col xs={12} sm={12}>
                     {nextMatchup && nextMatchup[0] ? <NextEvent {...nextMatchup[0]} /> : <p>No Upcoming Events</p>}
         
                 </Col>

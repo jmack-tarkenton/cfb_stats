@@ -12,8 +12,8 @@ import './App.css';
 function App() {
   return (
     <div className="App">
-      <Container fluid className={"px-0"}>
-        <CfbNav/>
+      <CfbNav />
+      <Container fluid className={"bg-dark text-light"}>
         <Routes>
           <Route path="/" element={<Top25Teams />} />
           <Route path="/team/:team_id" element={<Team />} />

@@ -1,8 +1,25 @@
 
+.top-25{
+  curser:pointer;
+}
+
 .table-image{
   max-height: 25px;
 }
 
 .card-image{
   max-height: 50px;
+}
+
+.img-card{
+
+  text-shadow:black 1px 0 10px;
+  text-shadow: 
+  1px 0px 1px black, 0px 1px 1px black, 
+  2px 1px 1px black, 1px 2px 1px black,
+  3px 2px 1px black, 2px 3px 1px black,
+  4px 3px 1px black, 3px 4px 1px black,
+  5px 4px 1px black, 4px 5px 1px black,
+  6px 5px 1px black, 5px 6px 1px black,
+  7px 6px 1px black;
 }
