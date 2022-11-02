@@ -1,12 +1,14 @@
 import { Row, Col, Card, ListGroup } from 'react-bootstrap';
 
 
+const placeholderPic="//ttwo.dk/wp-content/uploads/2017/08/person-placeholder.jpg";
+
 function PlayerCard(props) {
     let { player, stats } = props;
     let { fullName, headshot, jersey, position, year, team } = player;
     let { stat_type, stat } = stats;
-    const imgSrc = headshot.href;
-    const imgText = headshot.alt;
+    const imgSrc = headshot?.href || placeholderPic;
+    const imgText = headshot?.alt;
     return (
         <Card style={{
             // width: '18rem' 
