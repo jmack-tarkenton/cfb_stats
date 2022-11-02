@@ -1,6 +1,4 @@
 const express = require('express');
-const responseTime = require('response-time');
-
 const dotenv = require('dotenv');
 const path = require('path');
 const port = process.env.PORT || 5000;
@@ -13,7 +11,6 @@ const app = express();
 
 dotenv.config();
 
-app.use(responseTime());
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
