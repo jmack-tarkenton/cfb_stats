@@ -77,7 +77,7 @@ class Top25Teams extends Component {
             const rowId = hasId ? row.id : i;
             var rowCopy = { ...row };
             hasId && delete rowCopy.id;
-            const rowValues = Object.values(rowCopy);
+            const rowValues = Object.values(rowCopy).map(value=>value===0?"Not Ranked":value);
             return {
                 id: rowId,
                 content: rowValues,
