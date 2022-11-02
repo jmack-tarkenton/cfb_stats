@@ -1,11 +1,11 @@
 const express = require('express')
 const router = express.Router();
 const NodeCache = require("node-cache");
-const cfbCache = new NodeCache();
 const sdv = require("sportsdataverse");
 
 const fbsTeamGroupId = 80;
 const currentYear = 2022;
+const cfbCache = new NodeCache();
 
 router.get('/teams', async (req, res) => {
     try {
