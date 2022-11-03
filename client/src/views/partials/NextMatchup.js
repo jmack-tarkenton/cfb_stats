@@ -57,20 +57,7 @@ const NextMatchup = (props) => {
             })
             team["statLeaders"] = playerProps;
             return team;
-            // console.log({ team }, 'stats')
-            // leaders.map(leader => {
-            //     console.log({leader},'help')
-            //     team["statLeaders"][leader.displayName]=leader.leaders[0].athlete;
-            //     team["statLeaders"][leader.displayName]["stat"]=leader.leaders[0].displayValue
 
-            // })
-            return <Col>
-                <Row>
-                    {playerProps.map(player => <Col>
-                        <PlayerCard {...player} />
-                    </Col>)}
-                </Row>
-            </Col>;
 
         })
 
@@ -81,17 +68,11 @@ const NextMatchup = (props) => {
                 const { statLeaders } = team;
                 console.log({})
 
-                // return <Col>
-                //     <Row>
-                //         {statLeaders.map((playerStats) => <Col>
-                //             <PlayerCard{...playerStats} />
-                //         </Col>)}
-                //     </Row>
-                // </Col>
+             
                 return <Row className="mb-3">
                     <h5 className={'text-center text-light'}>{team.abbreviation} Key Players</h5>
-                    {statLeaders.map((playerStats) => <Col>
-                        <PlayerCard{...playerStats} />
+                    {statLeaders.map((playerStats) => <Col xs={6} sm={4}>
+                        <PlayerCard {...playerStats} />
                     </Col>)}
                 </Row>
 
@@ -124,10 +105,23 @@ const NextMatchup = (props) => {
         }
     }
 
-    const createDataSetFromBoxScore = (boxScore) => {
+    const createDataSetsFromBoxScore = (boxScore) => {
 
         const { teams } = boxScore;
-        return teams;
+        const labels = teams[0].statistics.map(({ label }) => label)
+        const datasets = teams.map(({ team, statistics }) => {
+            return {
+                label: team.displayName,
+                backgroundColor: "#" + team.color,
+                borderColor: "#" + team.alternateColor,
+                // data: Object.values(statistics),
+                data: statistics.map(({ displayValue }) => parseFloat(displayValue)),
+            }
+        })
+        return {
+            labels,
+            datasets
+        }
     }
 
     return (<Row>
@@ -143,7 +137,7 @@ const NextMatchup = (props) => {
         {matchup && matchup["game"] && game && boxScore && boxScore["teams"] &&
             <Col sm={6}>
                 <h5 className={"text-center"}>Team Comparison</h5>
-                <BarChart teams={boxScore.teams} style={{ backgroundColor: 'white' }} />
+                <BarChart {...createDataSetsFromBoxScore(boxScore)} style={{ backgroundColor: 'white' }} />
             </Col>
         }
     </Row>

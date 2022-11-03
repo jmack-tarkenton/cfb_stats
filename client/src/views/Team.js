@@ -1,17 +1,18 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Container, Row, Col } from 'react-bootstrap';
-import CfbTable from '../components/Table';
-import CfbNav from '../components/Navbar';
+import { Row, Col } from 'react-bootstrap';
+
 import NextEvent from './partials/NextMatchup';
 import TeamCard from '../components/cards/TeamCard';
 import BarChart from '../components/charts/BarChart';
 
 
+
 function Team(props) {
+    const { team_id } = useParams();
+
     const [team, setTeam] = useState({});
     const [nextMatchup, setNextMatchup] = useState(null);
-    const { team_id } = useParams();
 
     const getTeamInfo = async (team_id) => {
 
@@ -38,8 +39,8 @@ function Team(props) {
 
 
     const createTeamSummary = function (team) {
-
-        let { id, abbreviation, displayName, logos, nextEvent, record, standingSummary } = team;
+        console.log({ team })
+        let { id, abbreviation, displayName, logos, nextEvent, record, standingSummary, rank } = team;
 
         let short_date;
         let short_name;
@@ -56,44 +57,57 @@ function Team(props) {
             title: displayName,
             logo: logos[0]?.href,
             "Next Game": `${short_name} on ${short_date}`,
-            record: record.items[0].summary,
+            record: record.items[0],
+            rank,
             standing: standingSummary
         }
     }
 
-    function createTableDefinitions(team) {
+    const createDataSetsFromTeamRecordStats = (stats, teamInfo) => {
+        const { color, alternateColor, abbreviation } = teamInfo;
+        var data = stats.map((stat) => stat.value >= 5 && stat.name.toLowerCase().includes("points") && stat)
+            .filter(x => x);
 
-        const cols = Object.keys(team).filter(col => col != "id");
-        const rows = Object.values(team);
+        const labels = data.map(({ name }) => name);
+
+        const datasets = [{
+            label: abbreviation,
+            backgroundColor: "#" + color,
+            borderColor: "#" + alternateColor,
+            data: data.map(({ value }) => value),
+        }]
 
         return {
-            cols,
-            rows
+            labels,
+            datasets
         }
-
     }
 
-    const { color, alternateColor } = team;
-    const style = { width: "100%", color: "#" + color, backgroundColor: "#" + alternateColor };
+    const { color, alternateColor, abbreviation } = team;
+    const style = { color: "#" + color, backgroundColor: "#" + alternateColor };
 
 
 
     return (
-        <>
-            {/* {team && team.hasOwnProperty("displayName") && <CfbNav style={style} {...createTeamSummary(team)} />} */}
-            <Row >
+        <Row >
 
-                <Col xs={12} sm={12}>
-                    {team && team["displayName"] && <TeamCard style={style} {...createTeamSummary(team)} />}
-                </Col>
-                <Col xs={12} sm={12}>
-                    {nextMatchup && nextMatchup[0] ? <NextEvent {...nextMatchup[0]} /> : <p>No Upcoming Events</p>}
+            <Col xs={12} sm={12}>
+                {team && team["displayName"] && <TeamCard customStyle={style} {...createTeamSummary(team)}>
+                    <Row>
+                        <Col sm={6}>
 
-                </Col>
-            </Row>
+                        </Col>
+                        <Col sm={6}>
+                            <BarChart {...createDataSetsFromTeamRecordStats(team.record.items[0].stats, { color, alternateColor, abbreviation })} />
+                        </Col>
+                    </Row>
+                </TeamCard>}
+            </Col>
+            <Col xs={12} sm={12}>
+                {nextMatchup && nextMatchup[0] ? <NextEvent {...nextMatchup[0]} /> : <p>This team is coming up on a bye week. Check back next week.</p>}
 
-
-        </>
+            </Col>
+        </Row>
     );
 
 }

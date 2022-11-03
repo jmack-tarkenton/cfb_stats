@@ -38,21 +38,13 @@ export default function CfbDataTable(props) {
         size = "sm";
     }
 
-    const [state, setState] = useState({
-        cols,
-        rows,
-        data: [],
-        limit: 25,
-        activePage: 1,
-    })
-
     return (<BootstrapTable
         striped bordered hover variant="light" size={size} classes={"table-sm table-striped table-light text-center"}
         bootstrap4
         keyField="id"
         data={rows}
         columns={cols}
-        pagination={paginationFactory({ sizePerPage: 25, classes: "pagination" })}
+        pagination={paginationFactory({ sizePerPage: 25, classes: "pagination",totalSize:rows.length,showTotal:true })}
         rowEvents={{ onClick: handleClick }}
     />
 
