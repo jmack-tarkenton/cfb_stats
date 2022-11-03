@@ -10,19 +10,19 @@ import BarChart from '../components/charts/BarChart';
 
 function Team(props) {
     const [team, setTeam] = useState({});
-    const [nextMatchup,setNextMatchup]=useState(null);
+    const [nextMatchup, setNextMatchup] = useState(null);
     const { team_id } = useParams();
 
     const getTeamInfo = async (team_id) => {
 
         const response = await fetch(`/api/cfb/team/${team_id}/information`);
         const team = await response.json();
-        console.log({team});
+        console.log({ team });
         if (response.status !== 200) {
             throw Error(team)
         }
         let { nextEvent, displayName } = team;
-        if(nextEvent){
+        if (nextEvent) {
             setNextMatchup(nextEvent);
         }
         return team;
@@ -74,9 +74,9 @@ function Team(props) {
     }
 
     const { color, alternateColor } = team;
-    const style = { width:"100%",color: "#" + color, backgroundColor: "#" + alternateColor };
+    const style = { width: "100%", color: "#" + color, backgroundColor: "#" + alternateColor };
 
-    
+
 
     return (
         <>
@@ -88,7 +88,7 @@ function Team(props) {
                 </Col>
                 <Col xs={12} sm={12}>
                     {nextMatchup && nextMatchup[0] ? <NextEvent {...nextMatchup[0]} /> : <p>No Upcoming Events</p>}
-        
+
                 </Col>
             </Row>
 

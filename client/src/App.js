@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Routes, Route, Link } from "react-router-dom";
 import Container from 'react-bootstrap/Container';
 import CfbNav from './components/Navbar';
-import Top25Teams from './views/Top25Teams';
+import AllTeams from './views/AllTeams';
 import Team from './views/Team';
 
 
@@ -15,7 +15,7 @@ function App() {
       <CfbNav />
       <Container fluid className={"bg-dark text-light"}>
         <Routes>
-          <Route path="/" element={<Top25Teams />} />
+          <Route path="/" element={<AllTeams />} />
           <Route path="/team/:team_id" element={<Team />} />
         </Routes>
 

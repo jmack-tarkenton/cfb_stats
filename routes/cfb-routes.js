@@ -1,3 +1,4 @@
+const { response } = require('express');
 const express = require('express')
 const router = express.Router();
 const NodeCache = require("node-cache");
@@ -15,15 +16,45 @@ router.get('/teams', async (req, res) => {
             return res.json(JSON.parse(cachedTeams));
         }
 
-        const teams = await sdv.cfb.getTeamList(fbsTeamGroupId);
-        const ncaaTeams = teams.sports[0].leagues[0].teams;
-        ncaaTeams.sort((a, b) => parseInt(a.team.id) - parseInt(b.team.id));
-        cfbCache.set('teams', JSON.parse(ncaaTeams));
+        const teamList = await sdv.cfb.getTeamList(fbsTeamGroupId);
+
+        const teams = teamList.sports[0].leagues[0].teams;
+
+        const { standings } = await sdv.cfb.getStandings(currentYear);
+        const top25 = standings.entries.filter(({ team }) => team.rank <= 25 && team.rank > 0);
+
+        var ncaaTeams = teams.map(({ team }) => {
+            return {
+                id: team.id,
+                abbreviation: team.abbreviation,
+                name: team.displayName,
+                rank: team.rank ?? 0,
+                logo: team.logos[0]?.href ?? ""
+
+            }
+        })
+
+        //Accurate rankings aren't included in the sdv.cfb.getTeamList() method 
+        top25.forEach(({ team }) => {
+            const matchingTeam = ncaaTeams.find(({ id }) => id == team.id);
+            matchingTeam.rank = team.rank;
+        })
+
+
+        const sortedTeams = ncaaTeams.filter((team) => team.rank <= 25 && team.rank > 0)
+            .sort((a, b) => (a.rank == 0 || b.rank == 0) ? 0 : a.rank > b.rank ? 1 : -1);
+
+        const unrankedTeams = ncaaTeams.filter((team) => team.rank == 0);
+
+        ncaaTeams = [...sortedTeams, ...unrankedTeams];
+
+        cfbCache.set('teams', JSON.stringify(ncaaTeams));
         res.json(ncaaTeams);
 
     } catch (error) {
         console.error({ error })
-        res.status(err.response.status).json({ error })
+        // console.log({status:response.status})
+        res.status(error.response.status).json({ error })
     }
 });
 
@@ -45,7 +76,7 @@ router.get('/conferences', async (req, res) => {
 
     } catch (error) {
         console.error({ error })
-        res.status(err.response.status).json({ error })
+        res.status(error.response.status).json({ error })
     }
 });
 
@@ -63,57 +94,7 @@ router.get('/teams/conference/:conference_id', async (req, res) => {
 
     } catch (error) {
         console.error({ error })
-        res.status(err.response.status).json({ error })
-    }
-});
-
-router.get('/teams/standings/top25', async (req, res) => {
-    try {
-        // const teams = await sdv.cfb.getTeamList(conference_id);
-        if (cfbCache.has('top25')) {
-            const cachedTop25 = cfbCache.get('top25');
-            return res.json(JSON.parse(cachedTop25));
-        }
-        const { standings } = await sdv.cfb.getStandings(currentYear);
-        const entries = standings.entries.filter(({ team }) => team.rank <= 25 && team.rank > 0);
-
-        entries.sort((a, b) => a.team.rank - b.team.rank);
-
-        // const ncaaTeams = teams.sports[0].leagues[0].teams;
-        // const ncaaTeams = entries.slice(0, 25).map(({ team, stats }) => {
-        //     return {
-        //         id: team.id,
-        //         abbreviation: team.abbreviation,
-        //         name: team.displayName,
-        //         rank: team.rank,
-        //         logo: team.logos[0]?.href ?? ""
-
-        //     }
-        // });
-        var ncaaTeams = standings.entries.map(({ team, stats }) => {
-            return {
-                id: team.id,
-                abbreviation: team.abbreviation,
-                name: team.displayName,
-                rank: team.rank || 0,
-                logo: team.logos[0]?.href ?? ""
-
-            }
-        })
-        const sortedTeams = ncaaTeams.filter((team) => team.rank <= 25 && team.rank > 0)
-            .sort((a, b) => (a.rank == 0 || b.rank == 0) ? 0 : a.rank > b.rank ? 1 : -1);
-
-        const unrankedTeams = ncaaTeams.filter((team) => team.rank == 0);
-
-        ncaaTeams = [...sortedTeams, ...unrankedTeams];
-
-        cfbCache.set('top25', JSON.stringify(ncaaTeams));
-
-        res.json(ncaaTeams);
-
-    } catch (error) {
-        console.error({ error })
-        res.status(err.response.status).json({ error })
+        res.status(error.response.status).json({ error })
     }
 });
 
@@ -132,7 +113,7 @@ router.get('/team/:team_id/information', async (req, res) => {
 
     } catch (error) {
         console.error({ error })
-        res.status(err.response.status).json({ error })
+        res.status(error.response.status).json({ error })
     }
 });
 
@@ -144,7 +125,7 @@ router.get('/team/:team_id/players', async (req, res) => {
 
     } catch (error) {
         console.error({ error })
-        res.status(err.response.status).json({ error })
+        res.status(error.response.status).json({ error })
     }
 });
 
@@ -163,7 +144,7 @@ router.get('/games/:game_id', async (req, res) => {
 
     } catch (error) {
         console.error({ error })
-        res.status(err.response.status).json({ error })
+        res.status(error.response.status).json({ error })
     }
 });
 
