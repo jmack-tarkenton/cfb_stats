@@ -1,5 +1,5 @@
-import React, { Component,useState,useEffect } from 'react';
-import { Routes, Route, Link } from "react-router-dom";
+import React from 'react';
+import { Routes, Route } from "react-router-dom";
 import Container from 'react-bootstrap/Container';
 import CfbNav from './components/Navbar';
 import AllTeams from './views/AllTeams';

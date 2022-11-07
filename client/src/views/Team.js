@@ -6,7 +6,19 @@ import NextEvent from './partials/NextMatchup';
 import TeamCard from '../components/cards/TeamCard';
 import BarChart from '../components/charts/BarChart';
 
+const getFavorites = (team_id) => {
+    const favorites = JSON.parse(localStorage.getItem("favorites"));
+    if (favorites) {
 
+        const isFavorite = favorites.find(favorite => favorite.id == team_id);
+        if (isFavorite) {
+
+            return isFavorite;
+            
+        } 
+        return false
+    }
+}
 
 function Team(props) {
     const { team_id } = useParams();
@@ -15,14 +27,16 @@ function Team(props) {
     const [nextMatchup, setNextMatchup] = useState(null);
 
 
-    const [favorite, setFavorite] = useState(false);
+    const [favorite, setFavorite] = useState(getFavorites(team_id));
+
+   
 
 
     const getTeamInfo = async (team_id) => {
 
         const response = await fetch(`/api/cfb/team/${team_id}/information`);
         const team = await response.json();
-        console.log({ team });
+
         if (response.status !== 200) {
             throw Error(team)
         }
@@ -44,8 +58,7 @@ function Team(props) {
 
     useEffect(() => {
         const favorites = JSON.parse(localStorage.getItem("favorites"));
-        console.log({ favorites })
-        if (favorites) {
+        if (favorites && favorites.length>0) {
             const isFavorite = favorites.find(favorite => favorite.id == team_id);
             console.log({ isFavorite });
             if (isFavorite) {
@@ -66,6 +79,7 @@ function Team(props) {
             }
             favorites.push({ name: team.abbreviation, id: team.id })
             localStorage.setItem("favorites", JSON.stringify(favorites))
+            setFavorite({ name: team.abbreviation, id: team.id })
         }
     }
 
@@ -124,7 +138,7 @@ function Team(props) {
     return (
         <Row >
 
-            <Col xs={12} sm={12} >
+            <Col xs={12} sm={12} className={"mb-2"} >
                 {team && team["displayName"] && <Row>
                     <Col xs={12}>
                         <TeamCard customStyle={style} {...createTeamSummary(team)} favorite={favorite} makeFavorite={makeFavorite}>

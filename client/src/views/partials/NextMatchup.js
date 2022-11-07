@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Row, Col, Container } from 'react-bootstrap';
+import { Row, Col} from 'react-bootstrap';
 import ImageCard from '../../components/cards/ImageCard';
 import PlayerCard from '../../components/cards/PlayerCard';
 import BarChart from '../../components/charts/BarChart';
 
 const NextMatchup = (props) => {
-    const { name, competitions, date, id } = props;
+    const { name, id } = props;
 
     const [matchup, setMatchup] = useState(null);
     const [game, setGame] = useState(null);
@@ -15,7 +15,6 @@ const NextMatchup = (props) => {
     const getMatchupData = async function (game_id) {
         const result = await fetch(`/api/cfb/games/${game_id}`)
         const matchup = await result.json();
-        console.log({ matchup });
         let { game } = matchup;
         if (game) {
             setGame(game);
@@ -83,7 +82,7 @@ const NextMatchup = (props) => {
     }
 
     const createPropsForImgCard = (matchup) => {
-        let { game, picks } = matchup;
+        let { game } = matchup;
         let { gameInfo } = game;
         if (!game || !gameInfo) {
             return;

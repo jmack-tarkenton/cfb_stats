@@ -15,7 +15,7 @@ function CfbNav(props) {
       setFavorites(favorites)
     }
 
-  }, [])
+  }, [favorites])
 
   useEffect(() => {
     localStorage.setItem("favorites", JSON.stringify(favorites))
