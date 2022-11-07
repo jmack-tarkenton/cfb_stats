@@ -1,9 +1,10 @@
-import { Card, Row, Col } from 'react-bootstrap';
+import { Card, Row, Col, Button } from 'react-bootstrap';
 
-import BarChart from '../charts/BarChart';
+import { FaHeart } from 'react-icons/fa'
 
-const TeamCard = (props) => (
-    <Card
+const TeamCard = (props) => {
+    let { favorite, makeFavorite, id } = props;
+    return <Card
         style={{
 
             ...props.customStyle
@@ -18,7 +19,7 @@ const TeamCard = (props) => (
                     <h5 >{props.title}</h5>
                 </Col>
                 <Col xs={2}>
-                    Ranking: {props.rank ?? "Unranked"}
+                    {favorite && favorite["id"] ? <Button variant='danger'> <FaHeart /> </Button> : <Button className="bg-light text-dark" onClick={() => makeFavorite(id)}><FaHeart /></Button>}
                 </Col>
             </Row>
         </Card.Header>
@@ -29,7 +30,7 @@ const TeamCard = (props) => (
             </Card.Text>
         </Card.Body>
     </Card>
-);
+};
 
 export default TeamCard;
 

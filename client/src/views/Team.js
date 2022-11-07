@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, ListGroup } from 'react-bootstrap';
 
 import NextEvent from './partials/NextMatchup';
 import TeamCard from '../components/cards/TeamCard';
@@ -13,6 +13,10 @@ function Team(props) {
 
     const [team, setTeam] = useState({});
     const [nextMatchup, setNextMatchup] = useState(null);
+
+
+    const [favorite, setFavorite] = useState(false);
+
 
     const getTeamInfo = async (team_id) => {
 
@@ -33,13 +37,42 @@ function Team(props) {
 
 
     useEffect(() => {
+
         getTeamInfo(team_id)
             .then(setTeam)
-    }, [team_id]);
+    }, []);
+
+    useEffect(() => {
+        const favorites = JSON.parse(localStorage.getItem("favorites"));
+        console.log({ favorites })
+        if (favorites) {
+            const isFavorite = favorites.find(favorite => favorite.id == team_id);
+            console.log({ isFavorite });
+            if (isFavorite) {
+                setFavorite(isFavorite);
+            }
+        }
+    }, [])
+
+    const makeFavorite = () => {
+
+        const favorites = JSON.parse(localStorage.getItem("favorites"));
+        if (favorites) {
+
+            const isFavorite = favorites.find(favorite => favorite.id == team_id);
+            if (isFavorite) {
+                setFavorite(isFavorite);
+                return;
+            }
+            favorites.push({ name: team.abbreviation, id: team.id })
+            localStorage.setItem("favorites", JSON.stringify(favorites))
+        }
+    }
 
 
     const createTeamSummary = function (team) {
-        console.log({ team })
+
+
         let { id, abbreviation, displayName, logos, nextEvent, record, standingSummary, rank } = team;
 
         let short_date;
@@ -83,7 +116,7 @@ function Team(props) {
         }
     }
 
-    const { color, alternateColor, abbreviation } = team;
+    const { color, alternateColor, abbreviation, links } = team;
     const style = { color: "#" + color, backgroundColor: "#" + alternateColor };
 
 
@@ -91,17 +124,30 @@ function Team(props) {
     return (
         <Row >
 
-            <Col xs={12} sm={12}>
-                {team && team["displayName"] && <TeamCard customStyle={style} {...createTeamSummary(team)}>
-                    <Row>
-                        <Col sm={6}>
+            <Col xs={12} sm={12} >
+                {team && team["displayName"] && <Row>
+                    <Col xs={12}>
+                        <TeamCard customStyle={style} {...createTeamSummary(team)} favorite={favorite} makeFavorite={makeFavorite}>
 
-                        </Col>
-                        <Col sm={6}>
-                            <BarChart {...createDataSetsFromTeamRecordStats(team.record.items[0].stats, { color, alternateColor, abbreviation })} />
-                        </Col>
-                    </Row>
-                </TeamCard>}
+                        </TeamCard>
+                    </Col>
+                    <Col xs={12}>
+                        <Row>
+                            <Col sm={4} className="text-center">
+                                <h6>Team Links</h6>
+                                <ListGroup variant="flush">
+                                    {links && links.length > 0 ? links.map(link => (
+                                        <ListGroup.Item><a href={link.href} target="_blank">{link.text}</a></ListGroup.Item>
+                                    )) : <ListGroup.Item>No Links supplied for this team.</ListGroup.Item>}
+
+                                </ListGroup>
+                            </Col>
+                            <Col sm={8}>
+                                <BarChart {...createDataSetsFromTeamRecordStats(team.record.items[0].stats, { color, alternateColor, abbreviation })} />
+                            </Col>
+                        </Row>
+                    </Col>
+                </Row>}
             </Col>
             <Col xs={12} sm={12}>
                 {nextMatchup && nextMatchup[0] ? <NextEvent {...nextMatchup[0]} /> : <p>This team is coming up on a bye week. Check back next week.</p>}

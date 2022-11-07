@@ -20,7 +20,6 @@ ChartJS.register(
 
 const BarChart = (props) => {
   const { datasets, labels } = props;
-  console.log({ datasets, labels });
   const data = {
     labels,
     datasets
@@ -28,11 +27,12 @@ const BarChart = (props) => {
   return <Bar
     options={{}}
     data={data}
+    {...props}
     style={{
       backgroundColor: 'white',
+      maxHeight:"100%",
       ...props.style
     }}
-    {...props}
   />
 
 }

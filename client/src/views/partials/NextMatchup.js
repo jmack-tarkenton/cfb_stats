@@ -52,7 +52,7 @@ const NextMatchup = (props) => {
                         stat: displayValue
                     }
                 };
-                // return <PlayerCard {...propsObject} />
+
                 return propsObject;
             })
             team["statLeaders"] = playerProps;
@@ -61,7 +61,6 @@ const NextMatchup = (props) => {
 
         })
 
-        console.log({ team_leaders });
 
         return <Row >
             {team_leaders.map(team => {
@@ -78,9 +77,7 @@ const NextMatchup = (props) => {
 
             })}
         </Row>
-        // return <Row>
-        //     {team_leaders}
-        // </Row>;
+   
 
 
     }
@@ -95,7 +92,7 @@ const NextMatchup = (props) => {
         const temp = gameInfo?.weather?.temperature;
         const chanceOfRain = gameInfo?.weather?.precipitation;
         const weatherSummary = `${temp} degrees with a ${chanceOfRain}% chance of rain`;
-        // const leaders = createPlayerCardsForTeamLeaders(picks.leaders);
+
         return {
             title: name,
             imgSrc: gameInfo?.venue?.images[0]?.href,
@@ -114,7 +111,7 @@ const NextMatchup = (props) => {
                 label: team.displayName,
                 backgroundColor: "#" + team.color,
                 borderColor: "#" + team.alternateColor,
-                // data: Object.values(statistics),
+
                 data: statistics.map(({ displayValue }) => parseFloat(displayValue)),
             }
         })

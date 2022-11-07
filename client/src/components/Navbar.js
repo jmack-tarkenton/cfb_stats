@@ -1,41 +1,28 @@
 
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-
-// function CfbNav(props) {
-//     let {
-//         style,
-//         title,
-//         logo
-
-//     } = props;
-//     if (!style) {
-//         style = {};
-//     }
-//     return (
-
-//         <Navbar style={style}>
-//             <Container fluid>
-//                 <Navbar.Brand style={style} className={"fw-bold"}>
-//                     <img
-//                         alt={title}
-//                         src={logo}
-//                         width="30"
-//                         height="30"
-//                         className="d-inline-block align-top"
-//                     />{' '}
-//                     {title}
-//                 </Navbar.Brand>
-//             </Container>
-//         </Navbar>
-
-//     );
-// }
+import { useEffect, useState } from 'react';
+import { Nav, Container, Navbar, NavDropdown } from 'react-bootstrap';
 
 
 
-function CfbNav() {
+
+function CfbNav(props) {
+
+  const [favorites, setFavorites] = useState([]);
+
+  useEffect(() => {
+    const favorites = JSON.parse(localStorage.getItem("favorites"));
+    console.log({ favorites }, 'navbar')
+    if (favorites && favorites.length > 0) {
+      setFavorites(favorites)
+    }
+
+  }, [])
+
+  // useEffect(() => {
+  //   localStorage.setItem("favorites", JSON.stringify(favorites))
+  // }, [favorites])
+
+
   return (
     <Navbar bg="light" expand="lg">
       <Container>
@@ -44,8 +31,11 @@ function CfbNav() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link href="/">Home</Nav.Link>
-            {/* <Nav.Link href="#link">Link</Nav.Link> */}
-            
+            <NavDropdown title="Favorites" id="cfb-favorites">
+              {favorites && favorites.length > 0 ? favorites.map(({ name, id }) => <NavDropdown.Item href={`/team/${id}`}>
+                {name}
+              </NavDropdown.Item>) : <NavDropdown.Item href="#">No Favorites Yet</NavDropdown.Item>}
+            </NavDropdown>
           </Nav>
         </Navbar.Collapse>
       </Container>
