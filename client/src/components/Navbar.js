@@ -11,16 +11,15 @@ function CfbNav(props) {
 
   useEffect(() => {
     const favorites = JSON.parse(localStorage.getItem("favorites"));
-    console.log({ favorites }, 'navbar')
     if (favorites && favorites.length > 0) {
       setFavorites(favorites)
     }
 
   }, [])
 
-  // useEffect(() => {
-  //   localStorage.setItem("favorites", JSON.stringify(favorites))
-  // }, [favorites])
+  useEffect(() => {
+    localStorage.setItem("favorites", JSON.stringify(favorites))
+  }, [favorites])
 
 
   return (
@@ -32,7 +31,7 @@ function CfbNav(props) {
           <Nav className="me-auto">
             <Nav.Link href="/">Home</Nav.Link>
             <NavDropdown title="Favorites" id="cfb-favorites">
-              {favorites && favorites.length > 0 ? favorites.map(({ name, id }) => <NavDropdown.Item href={`/team/${id}`}>
+              {favorites && favorites.length > 0 ? favorites.map(({ name, id }) => <NavDropdown.Item href={`/team/${id}`} key={id}>
                 {name}
               </NavDropdown.Item>) : <NavDropdown.Item href="#">No Favorites Yet</NavDropdown.Item>}
             </NavDropdown>
