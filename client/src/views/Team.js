@@ -20,7 +20,7 @@ const getFavorites = (team_id) => {
     }
 }
 
-function Team(props) {
+function Team() {
     const { team_id } = useParams();
 
     const [team, setTeam] = useState({});
@@ -40,15 +40,13 @@ function Team(props) {
         if (response.status !== 200) {
             throw Error(team)
         }
-        let { nextEvent, displayName } = team;
+        let { nextEvent } = team;
         if (nextEvent) {
             setNextMatchup(nextEvent);
         }
         return team;
 
     }
-
-
 
     useEffect(() => {
 
