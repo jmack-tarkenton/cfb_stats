@@ -1,32 +1,45 @@
-import { Card, Row, Col, Button } from 'react-bootstrap';
+import {Card, Row, Col, Button, Dropdown, Stack} from 'react-bootstrap';
 
-import { FaHeart } from 'react-icons/fa'
+import {FaHeart} from 'react-icons/fa'
 
 const TeamCard = (props) => {
-    let { favorite, makeFavorite, id } = props;
+    let {favorite, makeFavorite, id, links} = props;
     return <Card
-        style={{
 
-            ...props.customStyle
-        }}
         className="mb-2">
-        <Card.Header>
+        <Card.Header  style={{
+            ...props.customStyle
+        }}>
             <Row className="align-items-center">
-                <Col xs={4}>
-                    <img className="card-image" src={props.logo} alt={props.title} />
-                </Col>
-                <Col xs={6} >
-                    <h5 >{props.title}</h5>
-                </Col>
-                <Col xs={2}>
-                    {favorite && favorite["id"] ? <Button variant='danger'> <FaHeart /> </Button> : <Button className="bg-light text-dark" onClick={() => makeFavorite(id)}><FaHeart /></Button>}
-                </Col>
+                <Stack direction={"horizontal"} gap={3}>
+                    <img className="card-image" src={props.logo} alt={props.title}/>
+
+                    <h5 className={"me-auto text-center"}>{props.title}</h5>
+                    <Dropdown>
+                        <Dropdown.Toggle variant={"outline-secondary"} style={{...props.customStyle}}>
+                            Team Links
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu>
+                            {links.map((link, index) =>
+                                <Dropdown.Item href={link.href} key={index}
+                                               target={"_blank"}>{link.text}</Dropdown.Item>
+                            )}
+                        </Dropdown.Menu>
+                    </Dropdown>
+                    {favorite && favorite["id"] ? <Button variant='danger'> <FaHeart/> </Button> :
+                        <Button className="bg-light text-dark" onClick={() => makeFavorite(id)}><FaHeart/></Button>}
+                </Stack>
+
+
             </Row>
         </Card.Header>
         <Card.Body>
-            <Card.Title>{props.standing}</Card.Title>
+            <Card.Title className={'text-dark'}>{props.standing}</Card.Title>
             <Card.Text>
-                {props.children}
+                <Row>
+                    {props.children}
+                </Row>
             </Card.Text>
         </Card.Body>
     </Card>
