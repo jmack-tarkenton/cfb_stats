@@ -168,11 +168,11 @@ function Team() {
                     <Col xs={12}>
                         <TeamCard customStyle={style} {...createTeamSummary(team)} favorite={favorite} links={links}
                                   makeFavorite={makeFavorite}>
-                            <Col xs={6}>
+                            <Col md={6}>
                                 {standings && <StandingsTable standings={createStandingsProps(standings)}
                                                               activeTeam={{id: team_id, style}}/>}
                             </Col>
-                            <Col xs={6}>
+                            <Col md={6}>
                                 <BarChart {...createDataSetsFromTeamRecordStats(team.record.items[0].stats, {
                                     color,
                                     alternateColor,

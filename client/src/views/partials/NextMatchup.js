@@ -11,7 +11,7 @@ const NextMatchup = (props) => {
     const [game, setGame] = useState(null);
     const [gameInfo, setGameInfo] = useState(null);
     const [boxScore, setBoxScore] = useState(null);
-    const [picks,setPicks] = useState(null);
+    const [picks, setPicks] = useState(null);
 
     const getMatchupData = async function (game_id) {
         const result = await fetch(`/api/cfb/games/${game_id}`)
@@ -29,7 +29,7 @@ const NextMatchup = (props) => {
             }
 
         }
-        if(picks){
+        if (picks) {
             console.log({picks})
             setPicks(picks);
         }
@@ -42,7 +42,7 @@ const NextMatchup = (props) => {
     }, [id]);
 
     const createPlayerCardsForTeamLeaders = (leaders) => {
-        const team_leaders = leaders.map((leader,index) => {
+        const team_leaders = leaders.map((leader, index) => {
 
             const {team, leaders} = leader;
             team["statLeaders"] = {};
@@ -67,18 +67,21 @@ const NextMatchup = (props) => {
 
 
         return <Row>
-            {team_leaders.map((team,index) => {
+            {team_leaders.map((team, index) => {
                 const {statLeaders} = team;
 
 
-                return <Col xs={6} key={index}>
-                    <Row className="mb-3">
-                        <h5 className={'text-center text-light'}>{team.abbreviation} Key Players</h5>
-                        {statLeaders.map((playerStats,index) => <Col xs={6} sm={4}>
+                return <Col sm={12} md={6} className="mb-3" key={index}>
+                    <Row className={"p-0"}>
+                    <h5 className={'text-center text-light'}>{team.abbreviation} Key Players</h5>
+                    {statLeaders.map((playerStats, index) => (
+                        <Col xs={4} md={4} className={"p-1"}>
                             <PlayerCard key={index} {...playerStats} />
-                        </Col>)}
+                        </Col>)
+                    )}
                     </Row>
                 </Col>
+
 
             })}
         </Row>
@@ -126,25 +129,25 @@ const NextMatchup = (props) => {
     }
 
     return (<>
-        <Row>
-            <h1 className={"text-center mt-2"}>Next Matchup</h1>
-            <hr/>
-            {matchup && gameInfo && gameInfo["venue"] &&
-                <Col xs={6}>
-                    <ImageCard {...createPropsForImgCard(matchup)}/>
-                </Col>
-            }
-            {matchup && matchup["game"] && game && boxScore && boxScore["teams"] &&
-                <Col sm={6}>
-                    <h5 className={"text-center"}>Team Comparison</h5>
-                    <BarChart {...createDataSetsFromBoxScore(boxScore)} />
-                </Col>
-            }
-
-        </Row>
             <Row>
-                {matchup && createPlayerCardsForTeamLeaders(matchup.picks.leaders)}
+                <h1 className={"text-center mt-2"}>Next Matchup</h1>
+                <hr/>
+                {matchup && gameInfo && gameInfo["venue"] &&
+                    <Col md={6}>
+                        <ImageCard {...createPropsForImgCard(matchup)}/>
+                    </Col>
+                }
+                {matchup && matchup["game"] && game && boxScore && boxScore["teams"] &&
+                    <Col md={6} >
+
+                        <BarChart {...createDataSetsFromBoxScore(boxScore)} />
+                    </Col>
+                }
+
             </Row>
+
+                {matchup && createPlayerCardsForTeamLeaders(matchup.picks.leaders)}
+
         </>
     )
 

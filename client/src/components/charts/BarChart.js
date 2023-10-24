@@ -1,39 +1,41 @@
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend,
 } from 'chart.js';
-import { Bar } from 'react-chartjs-2';
+import {Bar} from 'react-chartjs-2';
 
 ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend
 );
 
 const BarChart = (props) => {
-  const { datasets, labels } = props;
-  const data = {
-    labels,
-    datasets
-  }
-  return <Bar
-    options={{}}
-    data={data}
-    {...props}
-    style={{
-      backgroundColor: 'inherit',
-      maxHeight:"100%",
-      ...props.style
-    }}
-  />
+    const {datasets, labels} = props;
+    const data = {
+        labels,
+        datasets
+    }
+    return <Bar
+        options={{
+            maintainAspectRatio: false,
+        }}
+        data={data}
+        {...props}
+        style={{
+            backgroundColor: 'inherit',
+            maxHeight: "50vh",
+            ...props.style
+        }}
+    />
 
 }
 

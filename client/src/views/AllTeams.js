@@ -43,7 +43,7 @@ class AllTeams extends Component {
     }
 
     createTableDefinitions(teamArray) {
-        var table_order = ["id", "name", "abbreviation", "logo"];
+        var table_order = ["id", "name", "abbreviation"];
         const firstEntry = teamArray[0];
         var cols = Object.keys(firstEntry)
             .sort((a, b) => table_order.indexOf(a) - table_order.indexOf(b))
@@ -51,8 +51,8 @@ class AllTeams extends Component {
                 return {
                     dataField: col,
                     text: col.toUpperCase(),
-                    sort: (col != "id" && col != "logo"),
-                    hidden: col == "id"
+                    sort: (col !== "id" && col !== "logo"),
+                    hidden: col === "id"
                 }
             });
         const rows = teamArray.map((row, i) => {

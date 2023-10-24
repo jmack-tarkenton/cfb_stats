@@ -13,20 +13,21 @@ function isURL(str) {
         '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
     return !!pattern.test(str);
 }
+
 function isImage(url) {
     return /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(url);
 }
 
 export default function CfbDataTable(props) {
-    let { cols, rows, handleClick, size } = props;
+    let {cols, rows, handleClick, size} = props;
 
     rows = rows.map(row => {
         for (let [key, val] of Object.entries(row)) {
             if (isURL(val)) {
                 if (isImage(val)) {
-                    row[key] = <img src={val} alt={row.id} className={"table-image"} />
+                    row[key] = <img src={val} alt={row.id} className={"table-image"}/>
                 } else {
-                    row[key] = <a href={val} />
+                    row[key] = <a href={val}/>
                 }
             }
         }
@@ -39,14 +40,20 @@ export default function CfbDataTable(props) {
     }
 
     return (<BootstrapTable
-        striped bordered hover variant="light" size={size} classes={"table-sm table-striped table-light text-center"}
-        bootstrap4
-        keyField="id"
-        data={rows}
-        columns={cols}
-        pagination={paginationFactory({ sizePerPage: 25, classes: "pagination",totalSize:rows.length,showTotal:true })}
-        rowEvents={{ onClick: handleClick }}
-    />
+            striped bordered hover variant="light" size={size}
+            classes={"table-sm table-striped table-light text-center"}
+
+            keyField="id"
+            data={rows}
+            columns={cols}
+            pagination={paginationFactory({
+                sizePerPage: 25,
+                classes: "pagination",
+                totalSize: rows.length,
+                showTotal: true
+            })}
+            rowEvents={{onClick: handleClick}}
+        />
 
     );
 }

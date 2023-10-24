@@ -1,44 +1,34 @@
-import { Row, Col, Card, ListGroup } from 'react-bootstrap';
+import {Row, Col, Card, ListGroup, Stack} from 'react-bootstrap';
 
 
-const placeholderPic="//ttwo.dk/wp-content/uploads/2017/08/person-placeholder.jpg";
+const placeholderPic = "//ttwo.dk/wp-content/uploads/2017/08/person-placeholder.jpg";
 
 function PlayerCard(props) {
-    let { player, stats } = props;
-    let { fullName, headshot, jersey, position, team } = player;
-    let { stat_type, stat } = stats;
+    let {player, stats} = props;
+    let {fullName, headshot, jersey, position, team} = player;
+    let {stat_type, stat} = stats;
     const imgSrc = headshot?.href || placeholderPic;
     const imgText = headshot?.alt;
     return (
         <Card style={{
             // width: '18rem' 
         }}>
-            <Card.Header>
-                <Row >
-                    <Col xs={6}>
-                        <img src={team.logo} className={"table-image "} />
-                    </Col>
-                  
-                    <Col xs={6}>
+            <Card.Header className={"p-1"}>
+                <Stack direction={"horizontal"} >
+                    <img src={team.logo} className={"table-image m-0 p-0"}/>
+                    <span className={"text-dark fw-bold ms-auto"}>#{jersey} ({position.abbreviation})</span>
+                </Stack>
 
-                        <p className={"text-end text-dark fw-bold"}>#{jersey} ({position.abbreviation})</p>
-                    </Col>
-                 
-                </Row>
             </Card.Header>
-            <Card.Img variant="top" src={imgSrc} alt={imgText} />
-            <Card.Body className="text-dark text-center">
+            <Card.Img variant="top" src={imgSrc} alt={imgText}/>
+            <Card.Body className="text-dark text-center p-1">
                 <Card.Title>{fullName}</Card.Title>
             </Card.Body>
-            <ListGroup className="list-group-flush text-center">
+            <ListGroup className="list-group-flush text-center p-1">
                 <ListGroup.Item className="fw-bold">{stat_type}</ListGroup.Item>
                 <ListGroup.Item>{stat}</ListGroup.Item>
             </ListGroup>
-            {/* <Card.Body>
-                <Card.Link href="#">Card Link</Card.Link>
-                <Card.Link href="#">Another Link</Card.Link>
-            </Card.Body> */}
-        </Card >
+        </Card>
     );
 }
 
