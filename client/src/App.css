@@ -24,7 +24,7 @@
   7px 6px 1px black;
 }
 
-.standings-table{
+.standings-table, .top-25{
   vertical-align: middle;
 
   .active-team{

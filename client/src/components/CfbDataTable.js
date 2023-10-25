@@ -41,7 +41,7 @@ export default function CfbDataTable(props) {
 
     return (<BootstrapTable
             striped bordered hover variant="light" size={size}
-            classes={"table-sm table-striped table-light text-center"}
+            classes={"table-sm table-striped table-light text-center top-25"}
 
             keyField="id"
             data={rows}
