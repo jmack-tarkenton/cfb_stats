@@ -1,13 +1,19 @@
 
 import { useEffect, useState } from 'react';
 import { Nav, Container, Navbar, NavDropdown } from 'react-bootstrap';
+import SeasonSelect from './selects/SeasonSelect';
+
+import { useNavigate, useLocation } from 'react-router-dom';
 
 
 
 
 function CfbNav(props) {
 
+  const navigate = useNavigate();
+  const location = useLocation();
   const [favorites, setFavorites] = useState([]);
+  const [season, setSeason] = useState(new Date().getFullYear());
 
   useEffect(() => {
     const favorites = JSON.parse(localStorage.getItem("favorites"));
@@ -19,7 +25,27 @@ function CfbNav(props) {
 
   useEffect(() => {
     localStorage.setItem("favorites", JSON.stringify(favorites))
-  }, [favorites])
+  }, [favorites]);
+
+  // Use useEffect to handle state changes and update the URL
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.season);
+    queryParams.set('season', season);
+    console.log({ queryParams, location, params: queryParams.toString() });
+
+    // Replace the current state in the history without adding a new entry
+    navigate({pathname:location.pathname, search: queryParams.toString(), replace:true });
+
+    // If you want to push a new entry to the history, use history.push instead
+    // history.push({ season: queryParams.toString() });
+
+  }, [season, navigate, location.search]);
+
+ const  handleSeasonChange = (e) => {
+  
+    setSeason(e.target.value);
+  }
+
 
 
   return (
@@ -36,6 +62,9 @@ function CfbNav(props) {
               </NavDropdown.Item>) : <NavDropdown.Item href="#">No Favorites Yet</NavDropdown.Item>}
             </NavDropdown>
           </Nav>
+        </Navbar.Collapse>
+        <Navbar.Collapse className="justify-content-end">
+          <SeasonSelect handleChange={handleSeasonChange} value={season} />
         </Navbar.Collapse>
       </Container>
     </Navbar>

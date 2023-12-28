@@ -16,7 +16,7 @@ function App() {
       <CfbNav />
       <Container fluid className={"bg-dark text-light"}>
         <Routes>
-          <Route path="/" element={<AllTeams />} />
+          <Route path="" element={<AllTeams />} />
           <Route path="/team/:team_id" element={<Team />}  />
         </Routes>
 
