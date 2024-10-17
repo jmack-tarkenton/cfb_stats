@@ -7,6 +7,10 @@ const fbsTeamGroupId = 80;
 const defaultSeason = new Date().getFullYear();
 const cfbCache = new NodeCache();
 
+const CfbRepo = require('../repos/cfb-data-repo').default;
+
+const cfbRepo = new CfbRepo();
+
 router.get('/teams', async (req, res) => {
     const { season } = req.query;
 
@@ -144,6 +148,26 @@ router.get('/team/:team_id/players', async (req, res) => {
     try {
         const { players } = await sdv.cfb.getTeamPlayers(team_id);
         res.json(players);
+
+    } catch (error) {
+        console.error({ error })
+        res.status(error.response.status).json({ error })
+    }
+});
+
+router.get('/schedule/:team_name', async (req, res) => {
+    const { team_name} = req.params;
+    const { season } = req.query;
+    try {
+
+        if (cfbCache.has(`schedule_${team_name}_${season}`)) {
+            const cachedGame = cfbCache.get(`schedule_${team_name}_${season}`);
+            return res.json(JSON.parse(cachedGame));
+        }
+        const schedule=await cfbRepo.getSchedule(season,team_name);
+        console.log({schedule});
+        cfbCache.set(`schedule_${team_name}_${season}`, JSON.stringify(schedule ))
+        res.json(schedule);
 
     } catch (error) {
         console.error({ error })

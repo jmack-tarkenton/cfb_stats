@@ -15,6 +15,7 @@ const TeamCard = (props) => {
                     <img className="card-image" src={props.logo} alt={props.title}/>
 
                     <h5 className={"me-auto text-center"}>{props.title}</h5>
+                    <img className="card-image" src={props.conferenceLogo} alt={''}/>
                     <Dropdown>
                         <Dropdown.Toggle variant={"outline-secondary"} style={{...props.customStyle}}>
                             Team Links
