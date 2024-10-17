@@ -39,7 +39,7 @@ const NextMatchup = (props) => {
     useEffect(() => {
         getMatchupData(id)
             .then(matchup => setMatchup(matchup))
-    }, [id]);
+    }, []);
 
     const createPlayerCardsForTeamLeaders = (leaders) => {
         const team_leaders = leaders.map((leader, index) => {
@@ -75,7 +75,7 @@ const NextMatchup = (props) => {
                     <Row className={"p-0"}>
                     <h5 className={'text-center text-light'}>{team.abbreviation} Key Players</h5>
                     {statLeaders.map((playerStats, index) => (
-                        <Col xs={4} md={4} className={"p-1"}>
+                        <Col xs={4} md={4} className={"p-1"} key={index}>
                             <PlayerCard key={index} {...playerStats} />
                         </Col>)
                     )}

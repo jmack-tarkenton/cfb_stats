@@ -29,8 +29,6 @@ function Team() {
 
     const {globalState, setGlobalState} = useGlobalState();
 
-    const [searchParams, setSearchParams] = useSearchParams();
-    const [season, setSeason] = useState();
 
     const [conference, setConference] = useState();
 
@@ -51,7 +49,7 @@ function Team() {
     const getTeamInfo = async (team_id) => {
         setLoading(true);
 
-        const response = await fetch(`/api/cfb/team/${team_id}/information?${searchParams?.toString()}`);
+        const response = await fetch(`/api/cfb/team/${team_id}/information?season=${globalState.season}`);
         const team = await response.json();
         if (response.status !== 200) {
             throw Error(team)
@@ -86,7 +84,7 @@ function Team() {
     }
 
     const getSchedule = async (team_name) => {
-        const response = await fetch(`/api/cfb/schedule/${team_name}?${searchParams?.toString()}`);
+        const response = await fetch(`/api/cfb/schedule/${team_name}?season=${globalState.season}`);
         const schedule = await response.json();
         if (response.status !== 200) {
             throw Error(standings)
@@ -98,7 +96,7 @@ function Team() {
     const getStandings = async (conference_id) => {
         const matchingConference = globalState.conferences?.find(({id}) => id == conference_id) ?? {};
         setConference((prevState) => ({...matchingConference}));
-        const response = await fetch(`/api/cfb/conferences/${conference_id}/standings?${searchParams?.toString()}`);
+        const response = await fetch(`/api/cfb/conferences/${conference_id}/standings?season=${globalState.season}`);
         const standings = await response.json();
         if (response.status !== 200) {
             throw Error(standings)
@@ -117,9 +115,6 @@ function Team() {
         setLoading(false);
     }
 
-    useEffect(() => {
-        setSeason(searchParams.get("season"));
-    }, [searchParams])
 
     useEffect(() => {
 
@@ -129,7 +124,7 @@ function Team() {
                 console.error(err)
                 setLoading(false);
             })
-    }, [team_id]);
+    }, [globalState.season]);
 
 
     useEffect(() => {
@@ -242,7 +237,7 @@ function Team() {
                                         </Col>
                                         <Col md={6}>
 
-                                            {schedule && <Schedule schedule={schedule} conference={conference}/>}
+                                            {schedule && <Schedule schedule={schedule} conference={conference} teamName={team.nickname}/>}
                                         </Col>
 
                                     </TeamCard>

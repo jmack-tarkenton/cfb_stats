@@ -1,5 +1,5 @@
-import React, {createContext, useState, useContext} from 'react';
-import {Routes, Route} from "react-router-dom";
+import React, {createContext, useState, useContext, useEffect} from 'react';
+import {Routes, Route, useLocation, useNavigate} from "react-router-dom";
 import Container from 'react-bootstrap/Container';
 import CfbNav from './components/Navbar';
 import AllTeams from './views/AllTeams';
@@ -12,13 +12,16 @@ import './App.css';
 // Create a context
 const GlobalStateContext = createContext();
 
+
 // Create a custom hook for easy access
 export const useGlobalState = () => useContext(GlobalStateContext);
 export const GlobalStateProvider =  ({children}) => {
+
+
     const [globalState, setGlobalState] = useState({
         // Your global state here
-        conferences:[],
-        season:new Date().getFullYear().toString(),
+        conferences:localStorage.getItem('conferences') ? JSON.parse(localStorage.getItem('conferences')) : [],
+        season:localStorage.getItem('selected_season') ?? new Date().getFullYear().toString(),
     });
 
     async function getNcaaConferences() {
@@ -28,6 +31,7 @@ export const GlobalStateProvider =  ({children}) => {
         if (response.status !== 200) {
             throw Error(conferences)
         }
+        localStorage.setItem('conferences', JSON.stringify(conferences));
         return setGlobalState((prevState)=>({
             ...prevState,
             conferences
