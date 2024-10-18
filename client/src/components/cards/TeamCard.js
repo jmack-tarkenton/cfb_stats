@@ -7,7 +7,7 @@ const TeamCard = (props) => {
     return <Card
 
         className="mb-2">
-        <Card.Header  style={{
+        <Card.Header style={{
             ...props.customStyle
         }}>
             <Row className="align-items-center">
@@ -15,7 +15,7 @@ const TeamCard = (props) => {
                     <img className="card-image" src={props.logo} alt={props.title}/>
 
                     <h5 className={"me-auto text-center"}>{props.title}</h5>
-                    <img className="card-image" src={props.conferenceLogo} alt={''}/>
+
                     <Dropdown>
                         <Dropdown.Toggle variant={"outline-secondary"} style={{...props.customStyle}}>
                             Team Links
@@ -36,12 +36,15 @@ const TeamCard = (props) => {
             </Row>
         </Card.Header>
         <Card.Body>
-            <Card.Title className={'text-dark'}>{props.standing}</Card.Title>
-            <Card.Text>
-                <Row>
-                    {props.children}
-                </Row>
-            </Card.Text>
+            <div className={'text-dark d-flex gap-1 justify-content-center align-items-center pb-2'}><img className="card-image"
+                                                                                   src={props.conferenceLogo} alt={''}/>
+                {/*<span class={'fw-bold'}>{props.standing}</span>*/}
+            </div>
+
+            <Row>
+                {props.children}
+            </Row>
+
         </Card.Body>
     </Card>
 };

@@ -130,8 +130,6 @@ const NextMatchup = (props) => {
 
     return (<>
             <Row>
-                <h1 className={"text-center mt-2"}>Next Matchup</h1>
-                <hr/>
                 {matchup && gameInfo && gameInfo["venue"] &&
                     <Col md={6}>
                         <ImageCard {...createPropsForImgCard(matchup)}/>

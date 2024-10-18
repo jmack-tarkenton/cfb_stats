@@ -33,6 +33,7 @@ const BarChart = (props) => {
         style={{
             backgroundColor: 'inherit',
             maxHeight: "50vh",
+            height:"35vh",
             ...props.style
         }}
     />

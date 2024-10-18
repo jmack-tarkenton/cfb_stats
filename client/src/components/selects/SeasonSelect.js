@@ -11,8 +11,8 @@ function YearSelect(props) {
     };
     return (
         <FloatingLabel controlId="floatingSelect" label="Season">
-            <Form.Select aria-label="Select Season" onChange={handleChange}>
-            {years.map((year) => <option selected={year===value} key={year} value={year}>{year}</option>)}
+            <Form.Select aria-label="Select Season" value={value} onChange={handleChange}>
+            {years.map((year) => <option key={year} value={year}>{year}</option>)}
             </Form.Select>
         </FloatingLabel>
     );

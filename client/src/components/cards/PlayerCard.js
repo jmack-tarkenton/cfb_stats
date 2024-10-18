@@ -21,12 +21,12 @@ function PlayerCard(props) {
 
             </Card.Header>
             <Card.Img variant="top" src={imgSrc} alt={imgText}/>
-            <Card.Body className="text-dark text-center p-1">
-                <Card.Title>{fullName}</Card.Title>
+            <Card.Body className="text-dark text-center p-0">
+                <p>{fullName}</p>
             </Card.Body>
-            <ListGroup className="list-group-flush text-center p-1">
+            <ListGroup className="list-group-flush text-center">
                 <ListGroup.Item className="fw-bold">{stat_type}</ListGroup.Item>
-                <ListGroup.Item>{stat}</ListGroup.Item>
+                <ListGroup.Item className={'small'}>{stat}</ListGroup.Item>
             </ListGroup>
         </Card>
     );

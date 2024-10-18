@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {useParams, useSearchParams} from 'react-router-dom';
-import {Row, Col, ListGroup, Spinner} from 'react-bootstrap';
+import {Row, Col, ListGroup, Spinner, Tabs,Tab} from 'react-bootstrap';
 import {camelCaseToProperCase} from "../helpers/stringHelpers";
 import {useGlobalState} from "../App";
 
@@ -31,6 +31,8 @@ function Team() {
 
 
     const [conference, setConference] = useState();
+
+    const [tab, setTab] = useState('schedule');
 
 
     const [team, setTeam] = useState({});
@@ -226,27 +228,46 @@ function Team() {
                     </Row>
                     : <>
                         <Col xs={12} sm={12}>
-                            {team && team["displayName"] && <Row>
-                                <Col xs={12}>
-                                    <TeamCard customStyle={style} {...createTeamSummary(team)} favorite={favorite}
-                                              links={links}
-                                              makeFavorite={makeFavorite}>
-                                        <Col md={6}>
-                                            {standings && <StandingsTable standings={createStandingsProps(standings)}
-                                                                          activeTeam={{id: team_id, style}}/>}
-                                        </Col>
-                                        <Col md={6}>
 
-                                            {schedule && <Schedule schedule={schedule} conference={conference} teamName={team.nickname}/>}
-                                        </Col>
+                                    {team && team["displayName"] && <Row>
 
-                                    </TeamCard>
-                                </Col>
-                            </Row>}
+                                            <TeamCard customStyle={style} {...createTeamSummary(team)} favorite={favorite}
+                                                      links={links}
+                                                      makeFavorite={makeFavorite}>
+                                                <Tabs
+                                                    id="team-tabs"
+                                                    activeKey={tab}
+                                                    onSelect={(k) => setTab(k)}
+                                                    className="mb-3 link-light"
+                                                    justify
+                                                >
+                                                    <Tab eventKey="schedule" title="Schedule">
+                                                        <>
+                                                        {schedule && <Schedule schedule={schedule} conference={conference} teamName={team.nickname}/>}
+                                                        </>
+                                                    </Tab>
+                                                    <Tab eventKey="standings" title="Standings">
+                                                        <>
+                                                        {standings && <StandingsTable standings={createStandingsProps(standings)}
+                                                                                      activeTeam={{id: team_id, style}}/>}
+                                                        </>
+                                                    </Tab>
+                                                    <Tab eventKey="next-matchup" title="Next Game">
+                                                        <>
+                                                        {nextMatchup && nextMatchup[0] ? <NextEvent {...nextMatchup[0]} /> :
+                                                            <p>This team is coming up on a bye week. Check back next week.</p>}
+                                                        </>
+                                                    </Tab>
+                                                </Tabs>
+
+                                            </TeamCard>
+
+                                    </Row>}
+
+
                         </Col>
                         <Col xs={12} sm={12}>
-                            {nextMatchup && nextMatchup[0] ? <NextEvent {...nextMatchup[0]} /> :
-                                <p>This team is coming up on a bye week. Check back next week.</p>}
+
                         </Col></>
                 }
             </Row>
