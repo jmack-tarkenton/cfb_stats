@@ -3,12 +3,13 @@ import {Card, Row, Col, Button, Dropdown, Stack} from 'react-bootstrap';
 import {FaHeart} from 'react-icons/fa'
 
 const TeamCard = (props) => {
-    let {favorite, makeFavorite, id, links} = props;
+    let {favorite, makeFavorite, id, links,customStyle} = props;
     return <Card
 
-        className="mb-2">
+
+        className="mb-2 px-0 border-0">
         <Card.Header style={{
-            ...props.customStyle
+            ...customStyle,
         }}>
             <Row className="align-items-center">
                 <Stack direction={"horizontal"} gap={3}>
@@ -36,8 +37,9 @@ const TeamCard = (props) => {
             </Row>
         </Card.Header>
         <Card.Body>
-            <div className={'text-dark d-flex gap-1 justify-content-center align-items-center pb-2'}><img className="card-image"
-                                                                                   src={props.conferenceLogo} alt={''}/>
+            <div className={' d-flex gap-1 justify-content-center align-items-center pb-2'}><img
+                className="card-image"
+                src={props.conferenceLogo} alt={''}/>
                 {/*<span class={'fw-bold'}>{props.standing}</span>*/}
             </div>
 

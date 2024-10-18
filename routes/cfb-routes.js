@@ -132,7 +132,7 @@ router.get('/team/:team_id/information', async (req, res) => {
         }
 
         const { team } = await sdv.cfb.getTeamInfo(team_id);
-        console.log({ team });
+
         cfbCache.set(`teamInfo_${team_id}`, JSON.stringify(team));
         res.json(team);
 
@@ -165,7 +165,7 @@ router.get('/schedule/:team_name', async (req, res) => {
             return res.json(JSON.parse(cachedGame));
         }
         const schedule=await cfbRepo.getSchedule(season,team_name);
-        console.log({schedule});
+
         cfbCache.set(`schedule_${team_name}_${season}`, JSON.stringify(schedule ))
         res.json(schedule);
 
