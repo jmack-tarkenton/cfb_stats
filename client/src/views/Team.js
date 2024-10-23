@@ -48,7 +48,7 @@ function Team() {
 
     const [favorite, setFavorite] = useState(getFavorites(team_id));
 
-    const getTeamInfo = async (team_id) => {
+    const getTeamInfo = async (team_id, season) => {
         setLoading(true);
 
         const response = await fetch(`/api/cfb/team/${team_id}/information?season=${globalState.season}`);

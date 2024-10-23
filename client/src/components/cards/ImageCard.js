@@ -11,7 +11,7 @@ function ImageCard(props) {
 
     return (
         <Card className="bg-dark">
-            <Card.Img variant="top" src={imgSrc} alt={imgName} style={{objectFit:'cover'}} />
+            <Card.Img variant="top" src={imgSrc} alt={imgName} style={{objectFit:'fill'}} />
             <Card.ImgOverlay className="text-light img-card" >
                 <Card.Title>{title}</Card.Title>
                 <Card.Text>
@@ -19,12 +19,7 @@ function ImageCard(props) {
                 </Card.Text>
                 <Card.Text>{sub_text}</Card.Text>
             </Card.ImgOverlay>
-            <Card.Body>
-                <Card.Title>{bodyTitle}</Card.Title>
-                <Card.Text>
-                 {props.children}
-                </Card.Text>
-            </Card.Body>
+
         </Card>
     );
 }

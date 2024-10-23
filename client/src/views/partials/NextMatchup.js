@@ -98,7 +98,7 @@ const NextMatchup = (props) => {
         const venueName = gameInfo?.venue?.fullName;
         const temp = gameInfo?.weather?.temperature;
         const chanceOfRain = gameInfo?.weather?.precipitation;
-        const weatherSummary = `${temp} degrees with a ${chanceOfRain}% chance of rain`;
+        const weatherSummary = temp && chanceOfRain ? `${temp} degrees with a ${chanceOfRain}% chance of rain`:'';
 
         return {
             title: name,

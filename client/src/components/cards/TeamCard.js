@@ -15,7 +15,7 @@ const TeamCard = (props) => {
                 <Stack direction={"horizontal"} gap={3}>
                     <img className="card-image" src={props.logo} alt={props.title}/>
 
-                    <h5 className={"me-auto text-center"}>{props.title}</h5>
+                    <h5 className={"me-auto text-center"}>{props.title} ({props.record?.summary ?? "0-0"})</h5>
 
                     <Dropdown>
                         <Dropdown.Toggle variant={"outline-secondary"} style={{...props.customStyle}}>
