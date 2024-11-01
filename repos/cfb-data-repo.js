@@ -19,7 +19,11 @@ class CfbDataRepo{
     }
 
     async getSchedule(year,team){
-        return await this.doFetch(`games?year=${year}&team=${team}&seasonType=regular`);
+        return await this.doFetch(`games?year=${year}&team=${team}&seasonType=both`);
+    }
+
+    async getOdds(year,team){
+        return await this.doFetch(`metrics/wp/pregame?year=${year}&team=${team}`);
     }
 }
 

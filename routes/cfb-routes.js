@@ -12,7 +12,7 @@ const CfbRepo = require('../repos/cfb-data-repo').default;
 const cfbRepo = new CfbRepo();
 
 router.get('/teams', async (req, res) => {
-    const { season } = req.query;
+    const {season} = req.query;
 
     try {
 
@@ -25,11 +25,11 @@ router.get('/teams', async (req, res) => {
 
         const teams = teamList.sports[0].leagues[0].teams;
 
-        const {standings} = await sdv.cfb.getStandings({year:(season || defaultSeason), groupId:fbsTeamGroupId});
-    
-        const top25 = standings.entries.filter(({ team }) => team.rank <= 25 && team.rank > 0);
+        const {standings} = await sdv.cfb.getStandings({year: (season || defaultSeason), groupId: fbsTeamGroupId});
 
-        var ncaaTeams = teams.map(({ team }) => {
+        const top25 = standings.entries.filter(({team}) => team.rank <= 25 && team.rank > 0);
+
+        var ncaaTeams = teams.map(({team}) => {
             return {
                 id: team.id,
                 abbreviation: team.abbreviation,
@@ -41,8 +41,8 @@ router.get('/teams', async (req, res) => {
         })
 
         //Accurate rankings aren't included in the sdv.cfb.getTeamList() method 
-        top25.forEach(({ team }) => {
-            const matchingTeam = ncaaTeams.find(({ id }) => id == team.id);
+        top25.forEach(({team}) => {
+            const matchingTeam = ncaaTeams.find(({id}) => id == team.id);
             matchingTeam.rank = team.rank;
         })
 
@@ -58,53 +58,53 @@ router.get('/teams', async (req, res) => {
         res.json(ncaaTeams);
 
     } catch (error) {
-        console.error({ error })
+        console.error({error})
         // console.log({status:response.status})
-        res.status(error.response.status).json({ error })
+        res.status(error.response.status).json({error})
     }
 });
 
 router.get('/conferences', async (req, res) => {
-    const { season } = req.query;
+    const {season} = req.query;
     try {
-        const { conferences } = await sdv.cfb.getConferences(season ?? defaultSeason, fbsTeamGroupId);
+        const {conferences} = await sdv.cfb.getConferences(season ?? defaultSeason, fbsTeamGroupId);
 
-        const ncaaConferences = conferences.map(({ groupId, name, shortName, logo }) => {
+        const ncaaConferences = conferences.map(({groupId, name, shortName, logo}) => {
             return {
                 id: groupId,
                 abbreviation: shortName,
                 name,
                 logo
             }
-        }).filter(({ id }) => id < fbsTeamGroupId);
+        }).filter(({id}) => id < fbsTeamGroupId);
 
 
         res.json(ncaaConferences);
 
     } catch (error) {
-        console.error({ error })
-        res.status(error.response.status).json({ error })
+        console.error({error})
+        res.status(error.response.status).json({error})
     }
 });
 
 router.get('/conferences/:conference_id/standings', async (req, res) => {
-    const { season } = req.query;
+    const {season} = req.query;
     try {
-        const { conference_id } = req.params;
-        const result = await sdv.cfb.getStandings({ year: season ?? defaultSeason, group: conference_id });
+        const {conference_id} = req.params;
+        const result = await sdv.cfb.getStandings({year: season ?? defaultSeason, group: conference_id});
 
 
         res.json(result);
 
     } catch (error) {
-        console.error({ error })
-        res.status(error.response.status).json({ error })
+        console.error({error})
+        res.status(error.response.status).json({error})
     }
 });
 
 router.get('/teams/conference/:conference_id', async (req, res) => {
-    const { conference_id } = req.params;
-    const { season } = req.query;
+    const {conference_id} = req.params;
+    const {season} = req.query;
     const fbsDivision = 11;
     try {
         const teams = await sdv.cfb.getTeamList(conference_id);
@@ -116,68 +116,78 @@ router.get('/teams/conference/:conference_id', async (req, res) => {
         res.json(ncaaTeams);
 
     } catch (error) {
-        console.error({ error })
-        res.status(error.response.status).json({ error })
+        console.error({error})
+        res.status(error.response.status).json({error})
     }
 });
 
 
 router.get('/team/:team_id/information', async (req, res) => {
-    const { team_id } = req.params;
-    const { season } = req.query;
+    const {team_id} = req.params;
+    const {season} = req.query;
     try {
         if (cfbCache.has(`teamInfo_${team_id}`)) {
             const cachedTeamInfo = cfbCache.get(`teamInfo_${team_id}`);
             return res.json(JSON.parse(cachedTeamInfo));
         }
 
-        const { team } = await sdv.cfb.getTeamInfo(team_id);
+        const {team} = await sdv.cfb.getTeamInfo(team_id);
 
         cfbCache.set(`teamInfo_${team_id}`, JSON.stringify(team));
         res.json(team);
 
     } catch (error) {
-        console.error({ error })
-        res.status(error.response.status).json({ error })
+        console.error({error})
+        res.status(error.response.status).json({error})
     }
 });
 
 router.get('/team/:team_id/players', async (req, res) => {
-    const { team_id } = req.params;
-    const { season } = req.query;
+    const {team_id} = req.params;
+    const {season} = req.query;
     try {
-        const { players } = await sdv.cfb.getTeamPlayers(team_id);
+        const {players} = await sdv.cfb.getTeamPlayers(team_id);
         res.json(players);
 
     } catch (error) {
-        console.error({ error })
-        res.status(error.response.status).json({ error })
+        console.error({error})
+        res.status(error.response.status).json({error})
     }
 });
 
 router.get('/schedule/:team_name', async (req, res) => {
-    const { team_name} = req.params;
-    const { season } = req.query;
+    const {team_name} = req.params;
+    const {season} = req.query;
     try {
 
         if (cfbCache.has(`schedule_${team_name}_${season}`)) {
             const cachedGame = cfbCache.get(`schedule_${team_name}_${season}`);
             return res.json(JSON.parse(cachedGame));
         }
-        const schedule=await cfbRepo.getSchedule(season,team_name);
+        const schedule = await cfbRepo.getSchedule(season, team_name);
 
-        cfbCache.set(`schedule_${team_name}_${season}`, JSON.stringify(schedule ))
-        res.json(schedule);
+        const odds = await cfbRepo.getOdds(season, team_name);
+
+        const result = schedule.map((game) => {
+            const oddsMatch = odds.find((odd) => odd.gameId == game.id);
+            if (oddsMatch) {
+                game.odds = oddsMatch;
+            }
+            return game;
+        })
+
+        cfbCache.set(`schedule_${team_name}_${season}`, JSON.stringify(result))
+        res.json(result);
 
     } catch (error) {
-        console.error({ error })
-        res.status(error.response.status).json({ error })
+        console.error({error})
+        res.status(error?.response?.status ?? 500).json({error})
     }
 });
 
 router.get('/games/:game_id', async (req, res) => {
-    const { game_id } = req.params;
-    const { season } = req.query;
+    const {game_id} = req.params;
+    const {season} = req.query;
     try {
 
         if (cfbCache.has(`game_${game_id}`)) {
@@ -186,12 +196,12 @@ router.get('/games/:game_id', async (req, res) => {
         }
         const game = await sdv.cfb.getSummary(game_id);
         const picks = await sdv.cfb.getPicks(game_id);
-        cfbCache.set(`game_${game_id}`, JSON.stringify({ game, picks }))
-        res.json({ game, picks });
+        cfbCache.set(`game_${game_id}`, JSON.stringify({game, picks}))
+        res.json({game, picks});
 
     } catch (error) {
-        console.error({ error })
-        res.status(error.response.status).json({ error })
+        console.error({error})
+        res.status(error.response.status).json({error})
     }
 });
 

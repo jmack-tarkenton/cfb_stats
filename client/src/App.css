@@ -46,3 +46,40 @@ ul>li.nav-item *{
         font-weight: bold;
     }
 }
+
+
+.circular-progress {
+    position: relative;
+    display: inline-block;
+}
+
+.background-circle {
+    stroke: #e6e6e6;
+}
+
+.progress-circle {
+    transition: stroke-dashoffset 0.35s;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+}
+
+.progress-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.team-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.percentage-text {
+    display: block;
+    margin-top: 5px;
+    font-size: 1.2em;
+    font-weight: bold;
+}

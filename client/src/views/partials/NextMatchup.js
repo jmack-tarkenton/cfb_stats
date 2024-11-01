@@ -3,15 +3,18 @@ import {Row, Col} from 'react-bootstrap';
 import ImageCard from '../../components/cards/ImageCard';
 import PlayerCard from '../../components/cards/PlayerCard';
 import BarChart from '../../components/charts/BarChart';
+import WinPercentage from "../../components/odds/WinPercentage";
 
 const NextMatchup = (props) => {
-    const {name, id} = props;
+    const {name, id, extraData} = props;
+    console.log({props})
 
     const [matchup, setMatchup] = useState(null);
     const [game, setGame] = useState(null);
     const [gameInfo, setGameInfo] = useState(null);
     const [boxScore, setBoxScore] = useState(null);
     const [picks, setPicks] = useState(null);
+    const [homeTeam, setHomeTeam] = useState(null);
 
     const getMatchupData = async function (game_id) {
         const result = await fetch(`/api/cfb/games/${game_id}`)
@@ -26,6 +29,10 @@ const NextMatchup = (props) => {
 
             if (boxScore) {
                 setBoxScore(boxScore);
+                const hTeam=boxScore?.teams?.find(team => team.homeAway === "home")?.team;
+                if(hTeam){
+                    setHomeTeam(hTeam);
+                }
             }
 
         }
@@ -73,12 +80,12 @@ const NextMatchup = (props) => {
 
                 return <Col sm={12} md={6} className="mb-3" key={index}>
                     <Row className={"p-0"}>
-                    <h5 className={'text-center text-light'}>{team.abbreviation} Key Players</h5>
-                    {statLeaders.map((playerStats, index) => (
-                        <Col xs={4} md={4} className={"p-1"} key={index}>
-                            <PlayerCard key={index} {...playerStats} />
-                        </Col>)
-                    )}
+                        <h5 className={'text-center text-light'}>{team.abbreviation} Key Players</h5>
+                        {statLeaders.map((playerStats, index) => (
+                            <Col xs={4} md={4} className={"p-1"} key={index}>
+                                <PlayerCard key={index} {...playerStats} />
+                            </Col>)
+                        )}
                     </Row>
                 </Col>
 
@@ -98,7 +105,7 @@ const NextMatchup = (props) => {
         const venueName = gameInfo?.venue?.fullName;
         const temp = gameInfo?.weather?.temperature;
         const chanceOfRain = gameInfo?.weather?.precipitation;
-        const weatherSummary = temp && chanceOfRain ? `${temp} degrees with a ${chanceOfRain}% chance of rain`:'';
+        const weatherSummary = temp && chanceOfRain ? `${temp} degrees with a ${chanceOfRain}% chance of rain` : '';
 
         return {
             title: name,
@@ -128,23 +135,32 @@ const NextMatchup = (props) => {
         }
     }
 
+
     return (<>
             <Row>
+
                 {matchup && gameInfo && gameInfo["venue"] &&
-                    <Col md={6}>
+                    <Col md={5}>
                         <ImageCard {...createPropsForImgCard(matchup)}/>
                     </Col>
                 }
                 {matchup && matchup["game"] && game && boxScore && boxScore["teams"] &&
-                    <Col md={6} >
+                    <Col md={5}>
 
                         <BarChart {...createDataSetsFromBoxScore(boxScore)} />
                     </Col>
                 }
+                {typeof extraData != 'undefined' && extraData && <Col md={2} className={'text-center align-items-center my-auto text-dark'}>
+                    <WinPercentage logoUrl={homeTeam.logo}
+                                   percentage={((extraData?.odds?.homeWinProb ?? 1) * 100).toFixed(2)}
+                                   size={200}
+                                   color={homeTeam?.color ? `#${homeTeam.color}` : 'gray'}/>
+                    <h4>{extraData?.odds?.spread > 0 ? `+${extraData?.odds.spread}` : extraData?.odds.spread}</h4>
+                </Col>}
 
             </Row>
 
-                {matchup && createPlayerCardsForTeamLeaders(matchup.picks.leaders)}
+            {matchup && createPlayerCardsForTeamLeaders(matchup.picks.leaders)}
 
         </>
     )

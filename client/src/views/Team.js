@@ -57,10 +57,7 @@ function Team() {
             throw Error(team)
         }
 
-        let {nextEvent} = team;
-        if (nextEvent) {
-            setNextMatchup(nextEvent);
-        }
+
 
         const {standings} = await getStandings(team.groups.id);
 
@@ -76,6 +73,17 @@ function Team() {
                 setSchedule(schedule);
                 console.log({schedule});
             }
+        }
+
+        let {nextEvent} = team;
+
+        if (nextEvent) {
+            const matchingGameFromSchedule = schedule.find(({id}) => id == nextEvent[0]?.id);
+            console.log({matchingGameFromSchedule, nextEvent});
+            if(matchingGameFromSchedule) {
+                nextEvent[0]['extraData']={...matchingGameFromSchedule};
+            }
+            setNextMatchup(nextEvent);
         }
 
         const {color, alternateColor} = team;
@@ -243,7 +251,7 @@ function Team() {
                                                 >
                                                     <Tab eventKey="schedule" title="Schedule">
                                                         <>
-                                                        {schedule && <Schedule schedule={schedule} conference={conference} teamName={team.nickname}/>}
+                                                        {schedule && <Schedule schedule={schedule} conference={conference} team={team} style={style}/>}
                                                         </>
                                                     </Tab>
                                                     <Tab eventKey="standings" title="Standings">
@@ -254,7 +262,7 @@ function Team() {
                                                     </Tab>
                                                     <Tab eventKey="next-matchup" title="Next Game">
                                                         <>
-                                                        {nextMatchup && nextMatchup[0] ? <NextEvent {...nextMatchup[0]} /> :
+                                                        {nextMatchup && nextMatchup[0] ? <NextEvent {...nextMatchup[0]}  /> :
                                                             <p>This team is coming up on a bye week. Check back next week.</p>}
                                                         </>
                                                     </Tab>
